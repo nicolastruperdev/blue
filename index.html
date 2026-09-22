@@ -1204,6 +1204,72 @@
                 width: 50%;
             }
         }
+
+        /* ==========================================
+           BOTÓN FLOTANTE MÚSICA DE HALLOWEEN
+           ========================================== */
+        .audio-toggle-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 990;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid var(--orange-accent);
+            color: var(--yellow-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .audio-toggle-btn:hover {
+            transform: scale(1.1);
+            background: rgba(15, 23, 42, 0.95);
+            box-shadow: 0 6px 22px rgba(234, 88, 12, 0.45);
+            color: #ffffff;
+        }
+
+        .audio-toggle-btn.playing {
+            border-color: #facc15;
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.9), rgba(15, 23, 42, 0.95));
+            animation: halloweenPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes halloweenPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(234, 88, 12, 0.4); }
+            50% { box-shadow: 0 0 22px rgba(250, 204, 21, 0.7); }
+        }
+
+        .sound-wave {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 14px;
+            margin-left: 3px;
+        }
+
+        .sound-wave span {
+            width: 3px;
+            background-color: #facc15;
+            border-radius: 2px;
+            animation: soundWaveAnim 1.2s infinite ease-in-out;
+        }
+
+        .sound-wave span:nth-child(1) { height: 60%; animation-delay: 0s; }
+        .sound-wave span:nth-child(2) { height: 100%; animation-delay: 0.2s; }
+        .sound-wave span:nth-child(3) { height: 40%; animation-delay: 0.4s; }
+
+        @keyframes soundWaveAnim {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1); }
+        }
     </style>
 </head>
 
@@ -1479,6 +1545,11 @@
             </button>
         </div>
     </div>
+
+    <!-- Botón Flotante de Música de Halloween -->
+    <button id="audio-toggle-btn" class="audio-toggle-btn" aria-label="Música ambiental de Halloween" title="Activar música de Halloween">
+        <i class="fa-solid fa-volume-xmark"></i>
+    </button>
 
     <!-- Animaciones y Lógica en JavaScript -->
     <script>
@@ -1761,6 +1832,154 @@
         }
 
         // ==========================================
+        // MÚSICA DE FONDO AMBIENTAL DE HALLOWEEN
+        // Procedural, sutil y envolvente (Web Audio API)
+        // ==========================================
+        let halloweenAudioPlaying = false;
+        let ambientMasterGain = null;
+        let ambientOscillators = [];
+        let ambientIntervalId = null;
+
+        function startHalloweenAmbient() {
+            if (halloweenAudioPlaying) return;
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+
+            halloweenAudioPlaying = true;
+            updateAudioToggleButton(true);
+
+            // Master gain sutil para sonido ambiental de fondo (volumen maestro ~0.045)
+            ambientMasterGain = ctx.createGain();
+            ambientMasterGain.gain.setValueAtTime(0.001, now);
+            ambientMasterGain.gain.linearRampToValueAtTime(0.045, now + 2); // Fade in suave en 2s
+            ambientMasterGain.connect(ctx.destination);
+
+            // 1. Zumbido místico (Sub-drone sutil de Halloween)
+            const subOsc = ctx.createOscillator();
+            const subGain = ctx.createGain();
+            subOsc.type = 'sine';
+            subOsc.frequency.setValueAtTime(65.41, now); // C2 (65.41 Hz)
+            subGain.gain.value = 0.5;
+            subOsc.connect(subGain).connect(ambientMasterGain);
+            subOsc.start(now);
+            ambientOscillators.push(subOsc);
+
+            // 2. Ruido filtrado modulado (Viento espectral nocturno)
+            const bufferSize = ctx.sampleRate * 2;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+            const windNoise = ctx.createBufferSource();
+            windNoise.buffer = noiseBuffer;
+            windNoise.loop = true;
+
+            const windFilter = ctx.createBiquadFilter();
+            windFilter.type = 'bandpass';
+            windFilter.frequency.value = 240;
+            windFilter.Q.value = 3.0;
+
+            const lfo = ctx.createOscillator();
+            const lfoGain = ctx.createGain();
+            lfo.frequency.value = 0.12;
+            lfoGain.gain.value = 110;
+            lfo.connect(windFilter.frequency);
+            lfo.start(now);
+            ambientOscillators.push(lfo);
+
+            const windGain = ctx.createGain();
+            windGain.gain.value = 0.35;
+
+            windNoise.connect(windFilter).connect(windGain).connect(ambientMasterGain);
+            windNoise.start(now);
+            ambientOscillators.push(windNoise);
+
+            // 3. Theremin/Melodía misteriosa de Halloween con vibrato
+            const theremin = ctx.createOscillator();
+            const thereminGain = ctx.createGain();
+            const thereminLfo = ctx.createOscillator();
+            const thereminLfoGain = ctx.createGain();
+
+            theremin.type = 'sine';
+            theremin.frequency.setValueAtTime(261.63, now); // C4
+
+            thereminLfo.frequency.value = 4.5;
+            thereminLfoGain.gain.value = 5;
+            thereminLfo.connect(theremin.frequency);
+            thereminLfo.start(now);
+            ambientOscillators.push(thereminLfo);
+
+            thereminGain.gain.value = 0.25;
+            theremin.connect(thereminGain).connect(ambientMasterGain);
+            theremin.start(now);
+            ambientOscillators.push(theremin);
+
+            // Transiciones suaves entre notas espeluznantes
+            const eerieNotes = [220, 233.08, 261.63, 311.13, 329.63, 392.00, 440];
+            ambientIntervalId = setInterval(() => {
+                if (!halloweenAudioPlaying || !ambientMasterGain) return;
+                const cTime = ctx.currentTime;
+                const targetFreq = eerieNotes[Math.floor(Math.random() * eerieNotes.length)];
+                theremin.frequency.exponentialRampToValueAtTime(targetFreq, cTime + 2.5);
+            }, 4000);
+        }
+
+        function stopHalloweenAmbient() {
+            if (!halloweenAudioPlaying) return;
+            halloweenAudioPlaying = false;
+            updateAudioToggleButton(false);
+
+            if (ambientIntervalId) {
+                clearInterval(ambientIntervalId);
+                ambientIntervalId = null;
+            }
+
+            if (ambientMasterGain) {
+                const ctx = getAudioCtx();
+                const now = ctx.currentTime;
+                ambientMasterGain.gain.linearRampToValueAtTime(0.001, now + 1);
+                setTimeout(() => {
+                    ambientOscillators.forEach(osc => {
+                        try { osc.stop(); } catch (e) {}
+                    });
+                    ambientOscillators = [];
+                    ambientMasterGain = null;
+                }, 1000);
+            }
+        }
+
+        function toggleHalloweenAmbient() {
+            if (halloweenAudioPlaying) {
+                stopHalloweenAmbient();
+            } else {
+                startHalloweenAmbient();
+            }
+        }
+
+        function updateAudioToggleButton(isPlaying) {
+            const btn = document.getElementById('audio-toggle-btn');
+            if (!btn) return;
+            if (isPlaying) {
+                btn.classList.add('playing');
+                btn.setAttribute('title', 'Silenciar música de Halloween');
+                btn.innerHTML = '<i class="fa-solid fa-ghost"></i><span class="sound-wave"><span></span><span></span><span></span></span>';
+            } else {
+                btn.classList.remove('playing');
+                btn.setAttribute('title', 'Activar música de Halloween');
+                btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+            }
+        }
+
+        const audioToggleBtn = document.getElementById('audio-toggle-btn');
+        if (audioToggleBtn) {
+            audioToggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleHalloweenAmbient();
+            });
+        }
+
+        // ==========================================
         // 0. CONTROL DE VISTA TIPO CARTA / SOBRE
         // ==========================================
         const envelopeOverlay = document.getElementById('envelope-overlay');
@@ -1772,6 +1991,9 @@
         function handleOpenEnvelope() {
             if (isEnvelopeOpen) return;
             isEnvelopeOpen = true;
+
+            // Iniciar música ambiental de Halloween (volumen sutil)
+            startHalloweenAmbient();
 
             // Sonido: ruptura del sello de lacre
             playSealBreak();
