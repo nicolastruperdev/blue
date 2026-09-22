@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Una Cita Especial para Blue: Flores Amarillas, Pumpkin Spice & Festival del Terror 🌼🎃</title>
+    <title>Una Cita Especial para Blue: Flores, Pumpkin Spice & Festival del Terror 🌼🎃</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome Vector Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         /* ==========================================
            VARIABLES & DESIGN SYSTEM
@@ -92,6 +95,7 @@
                 opacity: 0;
                 transform: translateY(30px) scale(0.96);
             }
+
             100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
@@ -148,8 +152,15 @@
         }
 
         @keyframes floatFlower {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(3deg); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(3deg);
+            }
         }
 
         .css-flower {
@@ -171,18 +182,53 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        .petal:nth-child(1)  { transform: rotate(0deg) translate(-50%, -100%); }
-        .petal:nth-child(2)  { transform: rotate(30deg) translate(-50%, -100%); }
-        .petal:nth-child(3)  { transform: rotate(60deg) translate(-50%, -100%); }
-        .petal:nth-child(4)  { transform: rotate(90deg) translate(-50%, -100%); }
-        .petal:nth-child(5)  { transform: rotate(120deg) translate(-50%, -100%); }
-        .petal:nth-child(6)  { transform: rotate(150deg) translate(-50%, -100%); }
-        .petal:nth-child(7)  { transform: rotate(180deg) translate(-50%, -100%); }
-        .petal:nth-child(8)  { transform: rotate(210deg) translate(-50%, -100%); }
-        .petal:nth-child(9)  { transform: rotate(240deg) translate(-50%, -100%); }
-        .petal:nth-child(10) { transform: rotate(270deg) translate(-50%, -100%); }
-        .petal:nth-child(11) { transform: rotate(300deg) translate(-50%, -100%); }
-        .petal:nth-child(12) { transform: rotate(330deg) translate(-50%, -100%); }
+        .petal:nth-child(1) {
+            transform: rotate(0deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(2) {
+            transform: rotate(30deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(3) {
+            transform: rotate(60deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(4) {
+            transform: rotate(90deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(5) {
+            transform: rotate(120deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(6) {
+            transform: rotate(150deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(7) {
+            transform: rotate(180deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(8) {
+            transform: rotate(210deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(9) {
+            transform: rotate(240deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(10) {
+            transform: rotate(270deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(11) {
+            transform: rotate(300deg) translate(-50%, -100%);
+        }
+
+        .petal:nth-child(12) {
+            transform: rotate(330deg) translate(-50%, -100%);
+        }
 
         .flower-center {
             position: absolute;
@@ -200,8 +246,15 @@
         }
 
         @keyframes pulseCenter {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.08); }
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
         }
 
         /* Títulos */
@@ -309,7 +362,9 @@
             color: #7c3aed;
         }
 
-        .plan-content { flex: 1; }
+        .plan-content {
+            flex: 1;
+        }
 
         .plan-tag {
             font-size: 0.72rem;
@@ -320,9 +375,17 @@
             display: inline-block;
         }
 
-        .plan-pan .plan-tag { color: var(--orange-accent); }
-        .plan-latte .plan-tag { color: var(--gold); }
-        .plan-flags .plan-tag { color: #7c3aed; }
+        .plan-pan .plan-tag {
+            color: var(--orange-accent);
+        }
+
+        .plan-latte .plan-tag {
+            color: var(--gold);
+        }
+
+        .plan-flags .plan-tag {
+            color: #7c3aed;
+        }
 
         .plan-title {
             font-family: 'Playfair Display', serif;
@@ -581,13 +644,25 @@
            DISEÑO RESPONSIVE
            ========================================== */
         @media (min-width: 640px) {
-            .card-container { padding: 48px 44px; }
-            .title { font-size: 2.5rem; }
-            .buttons-group { flex-direction: row; }
-            .btn { width: 50%; }
+            .card-container {
+                padding: 48px 44px;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+
+            .buttons-group {
+                flex-direction: row;
+            }
+
+            .btn {
+                width: 50%;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Canvas para caída de pétalos vectoriales -->
@@ -595,7 +670,7 @@
 
     <!-- Tarjeta Principal de Invitación -->
     <main class="card-container">
-        
+
         <!-- Insignias de Nombre y Fecha -->
         <div class="badges-row">
             <div class="name-badge">
@@ -627,25 +702,27 @@
 
         <!-- Título Personalizado -->
         <h1 class="title">
-            <span class="name-highlight">Blue</span>, ¿Flores, Pumpkin Spice & <span class="gold-highlight">Festival del Terror</span>? 🌼👻
+            <span class="name-highlight">Blue</span>, ¿Flores, Pumpkin Spice & <span class="gold-highlight">Festival del
+                Terror</span>? 🌼👻
         </h1>
         <p class="subtitle">
-            Tengo preparado el combo definitivo: flores amarillas, pan de muerto recién horneado, un cremoso Pumpkin Spice Latte y la máxima emoción en Six Flags México.
+            Tengo preparado el combo definitivo: flores, pan de muerto recién horneado, un cremoso Pumpkin Spice Latte y
+            la máxima emoción en Six Flags México.
         </p>
 
         <!-- Sección de Planes Detallados -->
         <section class="plans-container">
-            
+
             <!-- Plan 1: Flores & Pan de Muerto -->
             <article class="plan-card plan-pan">
                 <div class="plan-icon-box">
                     <i class="fa-solid fa-cookie-bite"></i>
                 </div>
                 <div class="plan-content">
-                    <span class="plan-tag"><i class="fa-solid fa-sun"></i> Flores Amarillas & Sabor Tradicional</span>
-                    <h2 class="plan-title">Flores Amarillas & Pan de Muerto</h2>
+                    <span class="plan-tag"><i class="fa-solid fa-sun"></i> Flores & Sabor Tradicional</span>
+                    <h2 class="plan-title">Flores & Pan de Muerto</h2>
                     <p class="plan-desc">
-                        Entrega oficial de tus flores amarillas acompañadas de un esponjoso Pan de Muerto espolvoreado de azúcar.
+                        Entrega oficial de tus flores acompañadas de un esponjoso Pan de Muerto espolvoreado de azúcar.
                     </p>
                 </div>
             </article>
@@ -659,7 +736,8 @@
                     <span class="plan-tag"><i class="fa-solid fa-cloud"></i> Toque Otoñal Dulce</span>
                     <h2 class="plan-title">Pumpkin Spice Latte</h2>
                     <p class="plan-desc">
-                        Un delicioso y calientito Pumpkin Spice Latte con su toque de canela para empezar la tarde con la mejor vibra.
+                        Un delicioso y calientito Pumpkin Spice Latte con su toque de canela para empezar la tarde con
+                        la mejor vibra.
                     </p>
                 </div>
             </article>
@@ -673,7 +751,8 @@
                     <span class="plan-tag"><i class="fa-solid fa-bolt"></i> Adrenalina & Noche Spooky</span>
                     <h2 class="plan-title">Festival del Terror en Six Flags</h2>
                     <p class="plan-desc">
-                        Cerramos con la mejor aventura: atracciones extremas, montañas rusas y la experiencia escalofriante del Festival del Terror.
+                        Cerramos con la mejor aventura: atracciones extremas, montañas rusas y la experiencia
+                        escalofriante del Festival del Terror.
                     </p>
                 </div>
             </article>
@@ -714,7 +793,7 @@
     <!-- Toast Persuasivo Flotante -->
     <div id="persuasion-toast" class="persuasion-toast">
         <i class="fa-solid fa-face-kiss-wink-heart"></i>
-        <span id="toast-text">¡Blue! El pan de muerto y las flores amarillas te esperan 💛</span>
+        <span id="toast-text">¡Blue! El pan de muerto y las flores te esperan 💛</span>
     </div>
 
     <!-- Modal Persuasivo -->
@@ -729,10 +808,14 @@
             </p>
 
             <ul class="reasons-list">
-                <li><i class="fa-solid fa-sun"></i> <span><strong>Flores Amarillas:</strong> Tus flores amarillas están 100% prometidas.</span></li>
-                <li><i class="fa-solid fa-mug-hot"></i> <span><strong>Pumpkin Spice + Pan de Muerto:</strong> La combinación más deliciosa del otoño.</span></li>
-                <li><i class="fa-solid fa-ghost"></i> <span><strong>Festival del Terror:</strong> Diversión y sustos garantizados en Six Flags México.</span></li>
-                <li><i class="fa-solid fa-heart"></i> <span><strong>Un día inolvidable:</strong> Prometo que será una experiencia increíble para ti.</span></li>
+                <li><i class="fa-solid fa-sun"></i> <span><strong>Flores:</strong> Tus flores están 100%
+                        prometidas.</span></li>
+                <li><i class="fa-solid fa-mug-hot"></i> <span><strong>Pumpkin Spice + Pan de Muerto:</strong> La
+                        combinación más deliciosa del otoño.</span></li>
+                <li><i class="fa-solid fa-ghost"></i> <span><strong>Festival del Terror:</strong> Diversión y sustos
+                        garantizados en Six Flags México.</span></li>
+                <li><i class="fa-solid fa-heart"></i> <span><strong>Un día inolvidable:</strong> Prometo que será una
+                        experiencia increíble para ti.</span></li>
             </ul>
 
             <button id="persuaded-accept-btn" class="action-btn-modal">
@@ -879,18 +962,18 @@
             if (declineAttempts === 1) {
                 declineBtn.innerHTML = '<i class="fa-solid fa-heart-crack"></i> ¿Segura, Blue? 🥺';
                 showToast("¡Piénsalo bien Blue! El Pumpkin Spice y el Pan de Muerto te esperan 🎃");
-            } 
+            }
             else if (declineAttempts === 2) {
                 declineBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> ¡El botón intenta huir! ⚡';
                 moveDeclineBtn();
                 showToast("¡El botón está escapando! La única respuesta correcta es SÍ 😉");
-            } 
+            }
             else if (declineAttempts === 3) {
                 declineBtn.innerHTML = '<i class="fa-solid fa-lock"></i> ¡Opción NO Desactivada! 🌼';
                 declineBtn.style.transform = 'scale(0.85)';
                 declineBtn.style.opacity = '0.7';
-                showToast("ERROR 404: La opción 'No' fue bloqueada por el poder de las Flores Amarillas ✨");
-            } 
+                showToast("ERROR 404: La opción 'No' fue bloqueada por el poder de las Flores ✨");
+            }
             else {
                 persuadeModal.classList.add('active');
             }
@@ -919,4 +1002,5 @@
         }
     </script>
 </body>
+
 </html>
