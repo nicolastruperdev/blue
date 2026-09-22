@@ -87,19 +87,16 @@
             max-width: 660px;
             padding: 40px 32px;
             text-align: center;
-            animation: cardAppear 0.9s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px) scale(0.96);
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes cardAppear {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.96);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        .card-container.card-active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
 
         /* Insignia del Nombre & Fecha */
@@ -641,6 +638,534 @@
         }
 
         /* ==========================================
+           VISTA TIPO CARTA / SOBRE ULTRA-REALISTA
+           ========================================== */
+        .envelope-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 252, 240, 0.94) 0%, rgba(254, 243, 199, 0.90) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .envelope-overlay.fade-out {
+            opacity: 0;
+            transform: scale(1.08);
+            pointer-events: none;
+        }
+
+        .envelope-scene {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+        }
+
+        /* Insignia superior flotante */
+        .envelope-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #92400e;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            padding: 9px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(217, 119, 6, 0.25);
+            box-shadow: 0 4px 18px rgba(180, 83, 9, 0.15), 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 28px;
+            animation: bounceBadge 2.4s ease-in-out infinite;
+            text-transform: uppercase;
+        }
+
+        .envelope-badge i {
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        @keyframes bounceBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Contenedor del sobre con perspectiva 3D */
+        .envelope-box {
+            position: relative;
+            width: 100%;
+            max-width: 375px;
+            height: 240px;
+            perspective: 1200px;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .envelope-box:hover {
+            transform: translateY(-6px);
+        }
+
+        /* Sombra hiperrealista en la mesa */
+        .envelope-ground-shadow {
+            position: absolute;
+            bottom: -20px;
+            left: 5%;
+            width: 90%;
+            height: 25px;
+            background: radial-gradient(ellipse at center, rgba(120, 53, 15, 0.32) 0%, rgba(120, 53, 15, 0.12) 50%, transparent 75%);
+            filter: blur(8px);
+            z-index: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .envelope-box:hover .envelope-ground-shadow {
+            transform: scale(1.04);
+            opacity: 0.75;
+        }
+
+        /* Cuerpo base del sobre */
+        .envelope-back {
+            position: absolute;
+            inset: 0;
+            background: #fbf7ee;
+            border-radius: 14px;
+            border: 1px solid rgba(217, 119, 6, 0.25);
+            box-shadow: 0 15px 35px -5px rgba(120, 53, 15, 0.18), 0 5px 12px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Forro interior dorado decorativo (Lining) */
+        .envelope-lining {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fef3c7 100%);
+            background-image: 
+                radial-gradient(#d97706 0.85px, transparent 0.85px),
+                radial-gradient(#d97706 0.85px, #fef3c7 0.85px);
+            background-size: 14px 14px;
+            background-position: 0 0, 7px 7px;
+            opacity: 0.65;
+        }
+
+        /* Hoja de carta interior que sube al abrir */
+        .envelope-letter {
+            position: absolute;
+            top: 12px;
+            left: 5%;
+            width: 90%;
+            height: 88%;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 14px 16px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            z-index: 2;
+            transition: transform 0.9s 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .envelope-box.is-open .envelope-letter {
+            transform: translateY(-135px);
+        }
+
+        /* Línea horizontal de doblez del papel de la carta */
+        .letter-crease {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 4%, rgba(0, 0, 0, 0.07) 50%, transparent 96%);
+        }
+
+        .letter-border-inner {
+            border: 1.5px solid rgba(217, 119, 6, 0.35);
+            outline: 1px dashed rgba(245, 158, 11, 0.3);
+            outline-offset: -5px;
+            border-radius: 6px;
+            padding: 12px 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            background: #fffdf9;
+        }
+
+        .letter-header-tag {
+            font-size: 0.68rem;
+            color: #d97706;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .letter-emojis {
+            font-size: 1.25rem;
+            letter-spacing: 3px;
+        }
+
+        .letter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--dark-slate);
+            font-style: italic;
+        }
+
+        .letter-preview-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .letter-unlock-hint {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #b45309;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* ==========================================
+           PLIEGUES FÍSICOS DEL SOBRE (X-FOLDS)
+           ========================================== */
+        /* Pliegue izquierdo */
+        .fold-left {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(125deg, #fdfbf7 0%, #f4edd8 100%);
+            clip-path: polygon(0 0, 52% 50%, 0 100%);
+            border-radius: 14px 0 0 14px;
+            filter: drop-shadow(2px 0 3px rgba(146, 64, 14, 0.08));
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Pliegue derecho */
+        .fold-right {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(235deg, #fdfbf7 0%, #f4edd8 100%);
+            clip-path: polygon(100% 0, 48% 50%, 100% 100%);
+            border-radius: 0 14px 14px 0;
+            filter: drop-shadow(-2px 0 3px rgba(146, 64, 14, 0.08));
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Pliegue inferior que traslapa sobre izquierdo y derecho */
+        .fold-bottom {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, #efe3c3 0%, #f8f1de 55%, #fdfbf6 100%);
+            clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+            border-radius: 0 0 14px 14px;
+            filter: drop-shadow(0 -3px 5px rgba(146, 64, 14, 0.14));
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        /* Contenedor de detalles frontales (estampilla, matasellos y caligrafía) */
+        .envelope-front-details {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Estampilla vintage perforada */
+        .stamp-box {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Matasellos postal circular con ondas */
+        .postmark-seal {
+            position: absolute;
+            right: 48px;
+            top: 2px;
+            width: 58px;
+            height: 58px;
+            border: 1.5px solid rgba(78, 38, 14, 0.45);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.52rem;
+            font-weight: 800;
+            color: rgba(78, 38, 14, 0.65);
+            letter-spacing: 0.5px;
+            transform: rotate(-14deg);
+        }
+
+        .postmark-seal::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border: 1px dashed rgba(78, 38, 14, 0.35);
+            border-radius: 50%;
+        }
+
+        .postmark-seal span:nth-child(1) {
+            font-size: 0.6rem;
+            font-weight: 900;
+        }
+
+        .postmark-waves {
+            position: absolute;
+            right: 22px;
+            top: 20px;
+            width: 44px;
+            opacity: 0.5;
+            transform: rotate(-8deg);
+        }
+
+        .vintage-stamp {
+            position: relative;
+            width: 54px;
+            height: 66px;
+            background: #fffdf5;
+            border: 2px dashed #b45309;
+            border-radius: 2px;
+            padding: 4px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+            transform: rotate(3deg);
+            background-color: #fffbeb;
+        }
+
+        .stamp-inner {
+            border: 1px solid rgba(180, 83, 9, 0.35);
+            height: 100%;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px 2px;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+
+        .stamp-illustration {
+            font-size: 1.15rem;
+            line-height: 1;
+        }
+
+        .stamp-caption {
+            font-size: 0.44rem;
+            font-weight: 800;
+            color: #92400e;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .stamp-value {
+            font-size: 0.55rem;
+            font-weight: 900;
+            color: #b45309;
+        }
+
+        /* Caligrafía para Blue en el frente */
+        .calligraphy-address {
+            position: absolute;
+            bottom: 22px;
+            left: 20px;
+            text-align: left;
+        }
+
+        .cal-to {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #92400e;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: block;
+            margin-bottom: 2px;
+            opacity: 0.85;
+        }
+
+        .cal-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            font-weight: 800;
+            font-style: italic;
+            color: #1e3a8a;
+            line-height: 1.1;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            position: relative;
+            display: inline-block;
+        }
+
+        .cal-name::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -3px;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #d97706, #facc15, transparent);
+            border-radius: 2px;
+        }
+
+        .cal-subtitle {
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: #78350f;
+            margin-top: 6px;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+
+        /* Solapa triangular superior 3D (Flap) */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #fdfbf7 0%, #f5ecd6 65%, #eee0bf 100%);
+            border-radius: 14px 14px 0 0;
+            clip-path: polygon(0 0, 50% 60%, 100% 0);
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.35s;
+            filter: drop-shadow(0 5px 8px rgba(120, 53, 15, 0.22));
+            z-index: 8;
+        }
+
+        .envelope-box.is-open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        /* ==========================================
+           SELLO DE LACRE ORGÁNICO REALISTA
+           ========================================== */
+        .wax-seal {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 66px;
+            height: 66px;
+            background: radial-gradient(circle at 35% 30%, #f97316 0%, #dc2626 35%, #991b1b 70%, #7f1d1d 100%);
+            border-radius: 46% 54% 48% 52% / 54% 46% 54% 46%;
+            box-shadow: 
+                0 10px 25px rgba(127, 29, 29, 0.48),
+                0 2px 6px rgba(0, 0, 0, 0.25),
+                inset 2px 2px 3px rgba(255, 255, 255, 0.45),
+                inset -2px -2px 4px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+            animation: sealPulse 2.5s ease-in-out infinite;
+        }
+
+        /* Reborde irregular de cera derretida */
+        .wax-seal::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 53% 47% 52% 48% / 48% 52% 48% 52%;
+            background: radial-gradient(circle at 40% 35%, rgba(249, 115, 22, 0.5), rgba(127, 29, 29, 0.9));
+            z-index: -1;
+            filter: blur(1px);
+        }
+
+        /* Centro hendido por el cuño de metal con borde de filigrana dorada */
+        .wax-seal-inner {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 45% 45%, #881337 0%, #4c0519 100%);
+            box-shadow: 
+                inset 2.5px 2.5px 5px rgba(0, 0, 0, 0.8),
+                inset -1.5px -1.5px 3px rgba(255, 255, 255, 0.25),
+                0 1px 3px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px dashed rgba(254, 240, 138, 0.65);
+        }
+
+        /* Corazón en Azul Zafiro Real (en honor a Blue 💙) con brillo joya y relieve 3D */
+        .wax-seal-inner i {
+            background: linear-gradient(145deg, #e0f2fe 0%, #93c5fd 25%, #3b82f6 55%, #1d4ed8 85%, #172554 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.45rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 10px rgba(59, 130, 246, 0.65));
+            display: inline-block;
+            transform: scale(1.08);
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .envelope-box:hover .wax-seal-inner i {
+            transform: scale(1.18);
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 14px rgba(96, 165, 250, 0.95));
+        }
+
+        @keyframes sealPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 10px 25px rgba(127, 29, 29, 0.48);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.07);
+                box-shadow: 0 12px 30px rgba(234, 88, 12, 0.65), 0 0 0 8px rgba(234, 88, 12, 0.15);
+            }
+        }
+
+        .envelope-box.is-open .wax-seal {
+            transform: translate(-50%, -50%) scale(1.4) rotate(12deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Indicador sutil para tocar */
+        .envelope-instruction {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #92400e;
+            animation: pulseHint 2s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { transform: translateY(0); opacity: 0.9; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+
+        /* ==========================================
            DISEÑO RESPONSIVE
            ========================================== */
         @media (min-width: 640px) {
@@ -667,6 +1192,95 @@
 
     <!-- Canvas para caída de pétalos vectoriales -->
     <canvas id="petals-canvas"></canvas>
+
+    <!-- ==========================================
+         VISTA TIPO CARTA / SOBRE INICIAL (FIRST LOAD)
+         ========================================== -->
+    <div id="envelope-overlay" class="envelope-overlay">
+        <div class="envelope-scene">
+            <!-- Insignia superior -->
+            <div class="envelope-badge">
+                <i class="fa-solid fa-feather-pointed"></i> Tienes correspondencia especial
+            </div>
+
+            <!-- Sobre Interactivo 3D Realista -->
+            <div class="envelope-box" id="envelope-box" role="button" tabindex="0" aria-label="Abrir carta para Blue">
+                <!-- Sombra hiperrealista en la mesa -->
+                <div class="envelope-ground-shadow"></div>
+
+                <!-- Base interior del sobre con forro decorativo dorado -->
+                <div class="envelope-back">
+                    <div class="envelope-lining"></div>
+                </div>
+
+                <!-- Hoja de carta interior deslizable -->
+                <div class="envelope-letter">
+                    <div class="letter-crease"></div>
+                    <div class="letter-border-inner">
+                        <span class="letter-header-tag">
+                            <i class="fa-solid fa-sparkles"></i> CORRESPONDENCIA PRIVADA
+                        </span>
+                        <div class="letter-emojis">🌼 • 🎃 • ☕ • 🎢</div>
+                        <h3 class="letter-title">Para ti, Blue</h3>
+                        <p class="letter-preview-text">
+                            Hay momentos especiales que merecen vivirse juntos...
+                        </p>
+                        <span class="letter-unlock-hint">¡Toca para descubrir el plan!</span>
+                    </div>
+                </div>
+
+                <!-- Pliegues físicos del sobre (X-Folds con relieve y sombras) -->
+                <div class="fold-left"></div>
+                <div class="fold-right"></div>
+                <div class="fold-bottom"></div>
+
+                <!-- Detalles frontales: Estampilla perforada, matasellos y caligrafía -->
+                <div class="envelope-front-details">
+                    <div class="stamp-box">
+                        <!-- Matasellos postal con ondas -->
+                        <div class="postmark-seal">
+                            <span>CDMX</span>
+                            <span>10.OCT.26</span>
+                        </div>
+                        <svg class="postmark-waves" viewBox="0 0 50 20">
+                            <path d="M0,5 Q12.5,0 25,5 T50,5 M0,10 Q12.5,5 25,10 T50,10 M0,15 Q12.5,10 25,15 T50,15" fill="none" stroke="rgba(78,38,14,0.55)" stroke-width="1.3"/>
+                        </svg>
+
+                        <!-- Estampilla vintage -->
+                        <div class="vintage-stamp">
+                            <div class="stamp-inner">
+                                <span class="stamp-caption">MÉXICO</span>
+                                <span class="stamp-illustration">🎃🌼</span>
+                                <span class="stamp-value">$10.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dirección caligráfica -->
+                    <div class="calligraphy-address">
+                        <span class="cal-to">Para la señorita:</span>
+                        <div class="cal-name">Blue</div>
+                        <span class="cal-subtitle">Flores, Pumpkin Spice & Six Flags México</span>
+                    </div>
+                </div>
+
+                <!-- Solapa superior plegable 3D -->
+                <div class="envelope-flap"></div>
+
+                <!-- Sello de lacre orgánico hiperrealista -->
+                <div class="wax-seal" id="wax-seal" title="Toca para romper el sello y abrir">
+                    <div class="wax-seal-inner">
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicador y botón para tocar -->
+            <div class="envelope-instruction" id="envelope-instruction">
+                <i class="fa-solid fa-hand-pointer"></i> Toca el sello de lacre para abrir tu carta
+            </div>
+        </div>
+    </div>
 
     <!-- Tarjeta Principal de Invitación -->
     <main class="card-container">
@@ -910,6 +1524,276 @@
         animatePetals();
 
         // ==========================================
+        // SISTEMA DE SONIDOS DE INTERACCIÓN (Web Audio API)
+        // Todos los sonidos son procedurales, sin archivos externos
+        // ==========================================
+        let audioCtx = null;
+
+        function getAudioCtx() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // Sonido 1: Ruptura del sello de lacre (pop crujiente + whoosh de papel)
+        function playSealBreak() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+
+            // Pop crujiente
+            const pop = ctx.createOscillator();
+            const popGain = ctx.createGain();
+            pop.type = 'square';
+            pop.frequency.setValueAtTime(220, now);
+            pop.frequency.exponentialRampToValueAtTime(60, now + 0.12);
+            popGain.gain.setValueAtTime(0.35, now);
+            popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            pop.connect(popGain).connect(ctx.destination);
+            pop.start(now);
+            pop.stop(now + 0.15);
+
+            // Whoosh de papel abriendo
+            const bufferSize = ctx.sampleRate * 0.4;
+            const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            const noiseFilter = ctx.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.value = 800;
+            noiseFilter.Q.value = 0.5;
+            const noiseGain = ctx.createGain();
+            noiseGain.gain.setValueAtTime(0, now + 0.05);
+            noiseGain.gain.linearRampToValueAtTime(0.18, now + 0.12);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            noise.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
+            noise.start(now + 0.05);
+            noise.stop(now + 0.45);
+        }
+
+        // Sonido 2: Campanitas de celebración (aceptar cita)
+        function playChime() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+
+                // Armónico suave para darle brillo
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.value = freq * 2;
+                gain2.gain.setValueAtTime(0.06, now + i * 0.12);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.6);
+
+                gain.gain.setValueAtTime(0.22, now + i * 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.7);
+
+                osc.connect(gain).connect(ctx.destination);
+                osc2.connect(gain2).connect(ctx.destination);
+                osc.start(now + i * 0.12);
+                osc.stop(now + i * 0.12 + 0.7);
+                osc2.start(now + i * 0.12);
+                osc2.stop(now + i * 0.12 + 0.7);
+            });
+        }
+
+        // Sonido 3: Error / rechazo suave (tono descendente melancólico)
+        function playDeclineSound() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(440, now);
+            osc.frequency.exponentialRampToValueAtTime(220, now + 0.35);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.4);
+
+            // Segundo tono más bajo
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(330, now + 0.15);
+            osc2.frequency.exponentialRampToValueAtTime(165, now + 0.5);
+            gain2.gain.setValueAtTime(0.15, now + 0.15);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc2.connect(gain2).connect(ctx.destination);
+            osc2.start(now + 0.15);
+            osc2.stop(now + 0.55);
+        }
+
+        // Sonido 4: Notificación sutil (ding del toast)
+        function playNotifDing() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 880;
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.3);
+        }
+
+        // Sonido 5: Click suave de botón
+        function playClickSoft() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(400, now + 0.06);
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            osc.connect(gain).connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.08);
+        }
+
+        // Sonido 6: Fanfarria final (confirmación de cita)
+        function playFanfare() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+            // Arpegio ascendente brillante: C5 E5 G5 A5 C6
+            const notes = [523.25, 659.25, 783.99, 880, 1046.50];
+
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, now + i * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.5);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(now + i * 0.08);
+                osc.stop(now + i * 0.08 + 0.5);
+
+                // Armónico brillante
+                const harm = ctx.createOscillator();
+                const hGain = ctx.createGain();
+                harm.type = 'triangle';
+                harm.frequency.value = freq * 3;
+                hGain.gain.setValueAtTime(0.04, now + i * 0.08);
+                hGain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+                harm.connect(hGain).connect(ctx.destination);
+                harm.start(now + i * 0.08);
+                harm.stop(now + i * 0.08 + 0.35);
+            });
+
+            // Acorde sostenido final
+            setTimeout(() => {
+                const ctx2 = getAudioCtx();
+                const t = ctx2.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach(f => {
+                    const o = ctx2.createOscillator();
+                    const g = ctx2.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = f;
+                    g.gain.setValueAtTime(0.12, t);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
+                    o.connect(g).connect(ctx2.destination);
+                    o.start(t);
+                    o.stop(t + 1.2);
+                });
+            }, notes.length * 80 + 50);
+        }
+
+        // Sonido 7: Hover sobre el sobre (micro-crujido de papel)
+        function playPaperHover() {
+            const ctx = getAudioCtx();
+            const now = ctx.currentTime;
+            const bufferSize = ctx.sampleRate * 0.08;
+            const buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                d[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize) * 0.6;
+            }
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            const filt = ctx.createBiquadFilter();
+            filt.type = 'highpass';
+            filt.frequency.value = 2000;
+            const g = ctx.createGain();
+            g.gain.setValueAtTime(0.06, now);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            src.connect(filt).connect(g).connect(ctx.destination);
+            src.start(now);
+            src.stop(now + 0.08);
+        }
+
+        // ==========================================
+        // 0. CONTROL DE VISTA TIPO CARTA / SOBRE
+        // ==========================================
+        const envelopeOverlay = document.getElementById('envelope-overlay');
+        const envelopeBox = document.getElementById('envelope-box');
+        const envelopeInstruction = document.getElementById('envelope-instruction');
+        const cardContainer = document.querySelector('.card-container');
+        let isEnvelopeOpen = false;
+
+        function handleOpenEnvelope() {
+            if (isEnvelopeOpen) return;
+            isEnvelopeOpen = true;
+
+            // Sonido: ruptura del sello de lacre
+            playSealBreak();
+
+            // 1. Activar apertura visual del sobre
+            envelopeBox.classList.add('is-open');
+
+            // 2. Micro confeti festivo desde el sobre
+            triggerConfetti();
+
+            // 3. Desvanecer suavemente el sobre y desplegar la tarjeta de invitación
+            setTimeout(() => {
+                envelopeOverlay.classList.add('fade-out');
+                cardContainer.classList.add('card-active');
+                // Sonido: campanitas al revelar la tarjeta
+                playChime();
+            }, 1000);
+
+            // 4. Retirar el overlay de la pantalla para navegación limpia
+            setTimeout(() => {
+                envelopeOverlay.style.display = 'none';
+            }, 1750);
+        }
+
+        if (envelopeBox) {
+            envelopeBox.addEventListener('click', handleOpenEnvelope);
+            envelopeBox.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') handleOpenEnvelope();
+            });
+            // Micro-crujido al pasar el cursor sobre el sobre
+            envelopeBox.addEventListener('mouseenter', () => {
+                if (!isEnvelopeOpen) playPaperHover();
+            });
+        }
+        if (envelopeInstruction) {
+            envelopeInstruction.addEventListener('click', handleOpenEnvelope);
+        }
+
+        // ==========================================
         // 2. SISTEMA DE PERSUASIÓN OBLIGATORIA
         // ==========================================
         const acceptBtn = document.getElementById('accept-btn');
@@ -924,6 +1808,8 @@
         function showToast(message) {
             toastText.innerText = message;
             toast.classList.add('active');
+            // Sonido: ding de notificación
+            playNotifDing();
             setTimeout(() => {
                 toast.classList.remove('active');
             }, 3200);
@@ -933,12 +1819,21 @@
             persuadeModal.classList.remove('active');
             modal.classList.add('active');
             triggerConfetti();
+            // Sonido: fanfarria de celebración
+            playFanfare();
         }
 
-        acceptBtn.addEventListener('click', confirmSuccess);
-        persuadedAcceptBtn.addEventListener('click', confirmSuccess);
+        acceptBtn.addEventListener('click', () => {
+            playClickSoft();
+            confirmSuccess();
+        });
+        persuadedAcceptBtn.addEventListener('click', () => {
+            playClickSoft();
+            confirmSuccess();
+        });
 
         closeModal.addEventListener('click', () => {
+            playClickSoft();
             modal.classList.remove('active');
         });
 
@@ -947,6 +1842,7 @@
         declineBtn.addEventListener('mouseenter', () => {
             if (declineAttempts >= 2 && declineAttempts < 4) {
                 moveDeclineBtn();
+                playPaperHover();
             }
         });
 
@@ -958,6 +1854,8 @@
 
         declineBtn.addEventListener('click', () => {
             declineAttempts++;
+            // Sonido: tono melancólico de rechazo
+            playDeclineSound();
 
             if (declineAttempts === 1) {
                 declineBtn.innerHTML = '<i class="fa-solid fa-heart-crack"></i> ¿Segura, Blue? 🥺';
