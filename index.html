@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una Cita Especial para Blue: Flores Amarillas, Pumpkin Spice & Festival del Terror 🌼🎃</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Vector Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================
+           VARIABLES & DESIGN SYSTEM
+           ========================================== */
+        :root {
+            --yellow-primary: #facc15;
+            --yellow-bright: #ffe033;
+            --yellow-glow: #fef08a;
+            --gold: #d97706;
+            --gold-light: #fef3c7;
+            --orange-accent: #ea580c;
+            --orange-soft: #ffedd5;
+            --blue-accent: #2563eb;
+            --blue-soft: #dbeafe;
+            --dark-graphite: #1e293b;
+            --dark-slate: #0f172a;
+            --bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 40%, #ffedd5 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1c1917;
+            --text-muted: #57534e;
+            --shadow-card: 0 20px 45px -15px rgba(217, 119, 6, 0.2), 0 10px 25px -10px rgba(0, 0, 0, 0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        /* Reset & Global Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Canvas para pétalos amarillos y hojas procedimentales */
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ==========================================
+           CONTENEDOR DE TARJETA PRINCIPAL
+           ========================================== */
+        .card-container {
+            position: relative;
+            z-index: 10;
+            background: var(--card-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(254, 240, 138, 0.8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            width: 100%;
+            max-width: 660px;
+            padding: 40px 32px;
+            text-align: center;
+            animation: cardAppear 0.9s ease-out forwards;
+        }
+
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Insignia del Nombre & Fecha */
+        .badges-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .name-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.25);
+        }
+
+        /* Flor geométrica animada con CSS */
+        .flower-wrapper {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 24px auto;
+            animation: floatFlower 4s ease-in-out infinite;
+        }
+
+        @keyframes floatFlower {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+
+        .css-flower {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .petal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 52px;
+            background: linear-gradient(180deg, #ffe033 0%, #facc15 60%, #eab308 100%);
+            border-radius: 50% 50% 50% 0;
+            transform-origin: 0% 0%;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .petal:nth-child(1)  { transform: rotate(0deg) translate(-50%, -100%); }
+        .petal:nth-child(2)  { transform: rotate(30deg) translate(-50%, -100%); }
+        .petal:nth-child(3)  { transform: rotate(60deg) translate(-50%, -100%); }
+        .petal:nth-child(4)  { transform: rotate(90deg) translate(-50%, -100%); }
+        .petal:nth-child(5)  { transform: rotate(120deg) translate(-50%, -100%); }
+        .petal:nth-child(6)  { transform: rotate(150deg) translate(-50%, -100%); }
+        .petal:nth-child(7)  { transform: rotate(180deg) translate(-50%, -100%); }
+        .petal:nth-child(8)  { transform: rotate(210deg) translate(-50%, -100%); }
+        .petal:nth-child(9)  { transform: rotate(240deg) translate(-50%, -100%); }
+        .petal:nth-child(10) { transform: rotate(270deg) translate(-50%, -100%); }
+        .petal:nth-child(11) { transform: rotate(300deg) translate(-50%, -100%); }
+        .petal:nth-child(12) { transform: rotate(330deg) translate(-50%, -100%); }
+
+        .flower-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            background: radial-gradient(circle, #f97316 0%, #ea580c 70%, #c2410c 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.4), 0 0 15px rgba(234, 88, 12, 0.4);
+            border: 2px dashed rgba(254, 240, 138, 0.7);
+            z-index: 2;
+            animation: pulseCenter 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseCenter {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        /* Títulos */
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--dark-slate);
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+
+        .title span.name-highlight {
+            color: var(--blue-accent);
+            text-decoration: underline cubic-bezier(0.1, 1, 0.1, 1) 3px var(--yellow-primary);
+        }
+
+        .title span.gold-highlight {
+            color: var(--gold);
+        }
+
+        .subtitle {
+            font-size: 0.98rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+
+        /* ==========================================
+           BLOQUES DE PLANES
+           ========================================== */
+        .plans-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .plan-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(229, 231, 235, 0.9);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .plan-card.plan-pan::before {
+            background: linear-gradient(180deg, #ea580c, #f97316);
+        }
+
+        .plan-card.plan-latte::before {
+            background: linear-gradient(180deg, #d97706, #facc15);
+        }
+
+        .plan-card.plan-flags::before {
+            background: linear-gradient(180deg, #7c3aed, #1e293b);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+        }
+
+        .plan-icon-box {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .plan-pan .plan-icon-box {
+            background: var(--orange-soft);
+            color: var(--orange-accent);
+        }
+
+        .plan-latte .plan-icon-box {
+            background: var(--gold-light);
+            color: var(--gold);
+        }
+
+        .plan-flags .plan-icon-box {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .plan-content { flex: 1; }
+
+        .plan-tag {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .plan-pan .plan-tag { color: var(--orange-accent); }
+        .plan-latte .plan-tag { color: var(--gold); }
+        .plan-flags .plan-tag { color: #7c3aed; }
+
+        .plan-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark-slate);
+            margin-bottom: 6px;
+        }
+
+        .plan-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Barra Informativa Rápida */
+        .info-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            margin-bottom: 32px;
+            border: 1px dashed rgba(217, 119, 6, 0.3);
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .info-item i {
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .info-item strong {
+            color: var(--dark-slate);
+            font-size: 0.88rem;
+        }
+
+        /* ==========================================
+           BOTONES INTERACTIVOS & PERSUASIÓN
+           ========================================== */
+        .buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 16px 28px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #facc15 0%, #eab308 50%, #d97706 100%);
+            color: #451a03;
+            box-shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.4), 0 4px 10px rgba(250, 204, 21, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 15px 30px -5px rgba(234, 88, 12, 0.5), 0 6px 15px rgba(250, 204, 21, 0.4);
+            background: linear-gradient(135deg, #ffe033 0%, #facc15 50%, #ea580c 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(241, 245, 249, 0.9);
+            color: var(--text-muted);
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            transition: transform 0.2s ease, opacity 0.3s ease, background 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            color: var(--dark-slate);
+        }
+
+        /* Toast flotante de persuasión */
+        .persuasion-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, #7c2d12, #c2410c);
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            font-size: 0.92rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 999;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1.5px solid var(--yellow-primary);
+        }
+
+        .persuasion-toast.active {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ==========================================
+           MODALES (PERSUASIÓN & TICKET FINAL)
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            padding: 36px 28px;
+            max-width: 490px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--yellow-primary);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 3.2rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--dark-slate);
+            margin-bottom: 8px;
+        }
+
+        .reasons-list {
+            text-align: left;
+            background: var(--gold-light);
+            border: 1.5px dashed var(--gold);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin: 20px 0;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .reasons-list li {
+            font-size: 0.92rem;
+            color: #78350f;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.4;
+        }
+
+        .reasons-list li i {
+            color: var(--orange-accent);
+            margin-top: 3px;
+        }
+
+        .ticket-body {
+            background: var(--gold-light);
+            border: 2px dashed var(--gold);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #78350f;
+            line-height: 1.7;
+        }
+
+        .ticket-body div {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .ticket-body div:last-child {
+            margin-bottom: 0;
+            border-top: 1px dotted var(--gold);
+            padding-top: 6px;
+            font-weight: 700;
+        }
+
+        .action-btn-modal {
+            background: linear-gradient(135deg, #facc15, #ea580c);
+            color: #ffffff;
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+            transition: all 0.25s ease;
+            width: 100%;
+        }
+
+        .action-btn-modal:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 25px rgba(234, 88, 12, 0.45);
+        }
+
+        /* ==========================================
+           DISEÑO RESPONSIVE
+           ========================================== */
+        @media (min-width: 640px) {
+            .card-container { padding: 48px 44px; }
+            .title { font-size: 2.5rem; }
+            .buttons-group { flex-direction: row; }
+            .btn { width: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas para caída de pétalos vectoriales -->
+    <canvas id="petals-canvas"></canvas>
+
+    <!-- Tarjeta Principal de Invitación -->
+    <main class="card-container">
+        
+        <!-- Insignias de Nombre y Fecha -->
+        <div class="badges-row">
+            <div class="name-badge">
+                <i class="fa-solid fa-heart"></i> Para: Blue
+            </div>
+            <div class="date-badge">
+                <i class="fa-solid fa-calendar-star"></i> 10 de Octubre, 2026
+            </div>
+        </div>
+
+        <!-- Flor Amarilla en CSS Puro -->
+        <div class="flower-wrapper" aria-hidden="true">
+            <div class="css-flower">
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="petal"></div>
+                <div class="flower-center"></div>
+            </div>
+        </div>
+
+        <!-- Título Personalizado -->
+        <h1 class="title">
+            <span class="name-highlight">Blue</span>, ¿Flores, Pumpkin Spice & <span class="gold-highlight">Festival del Terror</span>? 🌼👻
+        </h1>
+        <p class="subtitle">
+            Tengo preparado el combo definitivo: flores amarillas, pan de muerto recién horneado, un cremoso Pumpkin Spice Latte y la máxima emoción en Six Flags México.
+        </p>
+
+        <!-- Sección de Planes Detallados -->
+        <section class="plans-container">
+            
+            <!-- Plan 1: Flores & Pan de Muerto -->
+            <article class="plan-card plan-pan">
+                <div class="plan-icon-box">
+                    <i class="fa-solid fa-cookie-bite"></i>
+                </div>
+                <div class="plan-content">
+                    <span class="plan-tag"><i class="fa-solid fa-sun"></i> Flores Amarillas & Sabor Tradicional</span>
+                    <h2 class="plan-title">Flores Amarillas & Pan de Muerto</h2>
+                    <p class="plan-desc">
+                        Entrega oficial de tus flores amarillas acompañadas de un esponjoso Pan de Muerto espolvoreado de azúcar.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Plan 2: Pumpkin Spice Latte -->
+            <article class="plan-card plan-latte">
+                <div class="plan-icon-box">
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+                <div class="plan-content">
+                    <span class="plan-tag"><i class="fa-solid fa-cloud"></i> Toque Otoñal Dulce</span>
+                    <h2 class="plan-title">Pumpkin Spice Latte</h2>
+                    <p class="plan-desc">
+                        Un delicioso y calientito Pumpkin Spice Latte con su toque de canela para empezar la tarde con la mejor vibra.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Plan 3: Festival del Terror en Six Flags México -->
+            <article class="plan-card plan-flags">
+                <div class="plan-icon-box">
+                    <i class="fa-solid fa-ghost"></i>
+                </div>
+                <div class="plan-content">
+                    <span class="plan-tag"><i class="fa-solid fa-bolt"></i> Adrenalina & Noche Spooky</span>
+                    <h2 class="plan-title">Festival del Terror en Six Flags</h2>
+                    <p class="plan-desc">
+                        Cerramos con la mejor aventura: atracciones extremas, montañas rusas y la experiencia escalofriante del Festival del Terror.
+                    </p>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Barra de Información -->
+        <div class="info-bar">
+            <div class="info-item">
+                <i class="fa-regular fa-calendar-check"></i>
+                <span>Fecha</span>
+                <strong>10 Oct, 2026</strong>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Lugar</span>
+                <strong>Six Flags México</strong>
+            </div>
+            <div class="info-item">
+                <i class="fa-solid fa-face-smile-beam"></i>
+                <span>Invitada</span>
+                <strong>Blue 💙</strong>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="buttons-group" id="btn-group-container">
+            <button id="accept-btn" class="btn btn-primary">
+                <i class="fa-solid fa-heart"></i> ¡Sí, acepto el plan!
+            </button>
+            <button id="decline-btn" class="btn btn-secondary">
+                <i class="fa-solid fa-face-frown"></i> No puedo
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Toast Persuasivo Flotante -->
+    <div id="persuasion-toast" class="persuasion-toast">
+        <i class="fa-solid fa-face-kiss-wink-heart"></i>
+        <span id="toast-text">¡Blue! El pan de muerto y las flores amarillas te esperan 💛</span>
+    </div>
+
+    <!-- Modal Persuasivo -->
+    <div id="persuade-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h2 class="modal-title">¡Modo Persuasión para Blue! 🚀✨</h2>
+            <p style="color: #57534e; font-size: 0.95rem;">
+                ¡Blue, no hay opción de cancelar! Aquí tienes 4 razones irrefutables para decir que SÍ:
+            </p>
+
+            <ul class="reasons-list">
+                <li><i class="fa-solid fa-sun"></i> <span><strong>Flores Amarillas:</strong> Tus flores amarillas están 100% prometidas.</span></li>
+                <li><i class="fa-solid fa-mug-hot"></i> <span><strong>Pumpkin Spice + Pan de Muerto:</strong> La combinación más deliciosa del otoño.</span></li>
+                <li><i class="fa-solid fa-ghost"></i> <span><strong>Festival del Terror:</strong> Diversión y sustos garantizados en Six Flags México.</span></li>
+                <li><i class="fa-solid fa-heart"></i> <span><strong>Un día inolvidable:</strong> Prometo que será una experiencia increíble para ti.</span></li>
+            </ul>
+
+            <button id="persuaded-accept-btn" class="action-btn-modal">
+                <i class="fa-solid fa-heart"></i> ¡Me convenciste, SÍ ACEPTO! ❤️
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación Final (Ticket) -->
+    <div id="modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <i class="fa-solid fa-ticket-simple"></i>
+            </div>
+            <h2 class="modal-title">¡Cita Confirmada para Blue! 🌼✨</h2>
+            <p style="color: #57534e; font-size: 0.95rem;">
+                ¡Sabía que dirías que sí! La cita más especial del año está reservada.
+            </p>
+
+            <div class="ticket-body">
+                <div><span>Invitada:</span> <strong>Blue 💙</strong></div>
+                <div><span>Fecha:</span> <strong>10 de Octubre del 2026</strong></div>
+                <div><span>Combo:</span> <strong>Flores + Pan + Pumpkin Spice + Terror</strong></div>
+                <div><span>Destino:</span> <strong>Six Flags México 🎢</strong></div>
+                <div><span>Estado:</span> <strong>¡Reservada al 100%! ❤️</strong></div>
+            </div>
+
+            <button id="close-modal" class="action-btn-modal" style="background: var(--dark-slate);">
+                <i class="fa-solid fa-check"></i> Guardar en mi corazón
+            </button>
+        </div>
+    </div>
+
+    <!-- Animaciones y Lógica en JavaScript -->
+    <script>
+        // ==========================================
+        // 1. CANAL DE PÉTALOS EN SEGUNDO PLANO
+        // ==========================================
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Petal {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.size = Math.random() * 12 + 8;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = Math.random() * 2 - 1;
+                const colors = ['#facc15', '#ffe033', '#fde047', '#fbbf24', '#f59e0b', '#ea580c'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = Math.random() * 0.7 + 0.3;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotSpeed;
+                if (this.y > height + 20) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, -this.size / 4, this.size, this.size / 2);
+                ctx.bezierCurveTo(this.size / 2, this.size, 0, this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        const petals = Array.from({ length: 35 }, () => new Petal());
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, width, height);
+            petals.forEach(petal => { petal.update(); petal.draw(); });
+            requestAnimationFrame(animatePetals);
+        }
+        animatePetals();
+
+        // ==========================================
+        // 2. SISTEMA DE PERSUASIÓN OBLIGATORIA
+        // ==========================================
+        const acceptBtn = document.getElementById('accept-btn');
+        const declineBtn = document.getElementById('decline-btn');
+        const modal = document.getElementById('modal');
+        const persuadeModal = document.getElementById('persuade-modal');
+        const persuadedAcceptBtn = document.getElementById('persuaded-accept-btn');
+        const closeModal = document.getElementById('close-modal');
+        const toast = document.getElementById('persuasion-toast');
+        const toastText = document.getElementById('toast-text');
+
+        function showToast(message) {
+            toastText.innerText = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3200);
+        }
+
+        function confirmSuccess() {
+            persuadeModal.classList.remove('active');
+            modal.classList.add('active');
+            triggerConfetti();
+        }
+
+        acceptBtn.addEventListener('click', confirmSuccess);
+        persuadedAcceptBtn.addEventListener('click', confirmSuccess);
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        let declineAttempts = 0;
+
+        declineBtn.addEventListener('mouseenter', () => {
+            if (declineAttempts >= 2 && declineAttempts < 4) {
+                moveDeclineBtn();
+            }
+        });
+
+        function moveDeclineBtn() {
+            const randomX = (Math.random() - 0.5) * 160;
+            const randomY = (Math.random() - 0.5) * 80;
+            declineBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.9)`;
+        }
+
+        declineBtn.addEventListener('click', () => {
+            declineAttempts++;
+
+            if (declineAttempts === 1) {
+                declineBtn.innerHTML = '<i class="fa-solid fa-heart-crack"></i> ¿Segura, Blue? 🥺';
+                showToast("¡Piénsalo bien Blue! El Pumpkin Spice y el Pan de Muerto te esperan 🎃");
+            } 
+            else if (declineAttempts === 2) {
+                declineBtn.innerHTML = '<i class="fa-solid fa-bolt"></i> ¡El botón intenta huir! ⚡';
+                moveDeclineBtn();
+                showToast("¡El botón está escapando! La única respuesta correcta es SÍ 😉");
+            } 
+            else if (declineAttempts === 3) {
+                declineBtn.innerHTML = '<i class="fa-solid fa-lock"></i> ¡Opción NO Desactivada! 🌼';
+                declineBtn.style.transform = 'scale(0.85)';
+                declineBtn.style.opacity = '0.7';
+                showToast("ERROR 404: La opción 'No' fue bloqueada por el poder de las Flores Amarillas ✨");
+            } 
+            else {
+                persuadeModal.classList.add('active');
+            }
+        });
+
+        function triggerConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = ['#facc15', '#ea580c', '#38bdf8', '#ec4899', '#7c3aed'][Math.floor(Math.random() * 5)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.zIndex = '2000';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.transition = 'transform 2.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 2.5s ease';
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    confetti.style.transform = `translate(${Math.random() * 200 - 100}px, ${window.innerHeight + 50}px) rotate(${Math.random() * 720}deg)`;
+                    confetti.style.opacity = '0';
+                }, 20);
+                setTimeout(() => confetti.remove(), 2600);
+            }
+        }
+    </script>
+</body>
+</html>
