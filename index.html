@@ -1848,133 +1848,120 @@
             halloweenAudioPlaying = true;
             updateAudioToggleButton(true);
 
-            // Master gain sutil para sonido ambiental de fondo (volumen maestro sutil ~0.045)
+            // Master gain sutil para ambientación mágica de fondo (~0.05)
             ambientMasterGain = ctx.createGain();
             ambientMasterGain.gain.setValueAtTime(0.001, now);
-            ambientMasterGain.gain.linearRampToValueAtTime(0.045, now + 1.5);
+            ambientMasterGain.gain.linearRampToValueAtTime(0.05, now + 2); // Fade in cálido 2s
             ambientMasterGain.connect(ctx.destination);
 
-            // 1. VIENTO ESPECTRAL NOCTURNO DE FONDO
+            // 1. ALMOHADILLA AMBIENTAL CÁLIDA (Warm Cozy Autumn Synth Pad)
+            const padOsc1 = ctx.createOscillator();
+            const padOsc2 = ctx.createOscillator();
+            const padGain = ctx.createGain();
+            const padFilter = ctx.createBiquadFilter();
+
+            padOsc1.type = 'sine';     padOsc1.frequency.value = 130.81; // C3
+            padOsc2.type = 'triangle'; padOsc2.frequency.value = 196.00; // G3
+
+            padFilter.type = 'lowpass';
+            padFilter.frequency.value = 400; // Sonido tibio, acogedor y dulce
+
+            padGain.gain.setValueAtTime(0.001, now);
+            padGain.gain.linearRampToValueAtTime(0.22, now + 3);
+
+            padOsc1.connect(padFilter);
+            padOsc2.connect(padFilter);
+            padFilter.connect(padGain).connect(ambientMasterGain);
+
+            padOsc1.start(now); ambientOscillators.push(padOsc1);
+            padOsc2.start(now); ambientOscillators.push(padOsc2);
+
+            // 2. BRISA DE OTOÑO SUAVE DE FONDO
             const bufferSize = ctx.sampleRate * 2;
             const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-            const windNoise = ctx.createBufferSource();
-            windNoise.buffer = noiseBuffer;
-            windNoise.loop = true;
+            const d = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) d[i] = Math.random() * 2 - 1;
+            const breezeSrc = ctx.createBufferSource();
+            breezeSrc.buffer = noiseBuffer;
+            breezeSrc.loop = true;
 
-            const windFilter = ctx.createBiquadFilter();
-            windFilter.type = 'bandpass';
-            windFilter.frequency.value = 300;
-            windFilter.Q.value = 2.5;
+            const breezeFilter = ctx.createBiquadFilter();
+            breezeFilter.type = 'bandpass';
+            breezeFilter.frequency.value = 450;
+            breezeFilter.Q.value = 3.5;
 
-            const windLfo = ctx.createOscillator();
-            const windLfoGain = ctx.createGain();
-            windLfo.frequency.value = 0.15;
-            windLfoGain.gain.value = 140;
-            windLfo.connect(windFilter.frequency);
-            windLfo.start(now);
-            ambientOscillators.push(windLfo);
+            const breezeLfo = ctx.createOscillator();
+            const breezeLfoGain = ctx.createGain();
+            breezeLfo.frequency.value = 0.1;
+            breezeLfoGain.gain.value = 160;
+            breezeLfo.connect(breezeFilter.frequency);
+            breezeLfo.start(now);
+            ambientOscillators.push(breezeLfo);
 
-            const windGain = ctx.createGain();
-            windGain.gain.value = 0.2;
-            windNoise.connect(windFilter).connect(windGain).connect(ambientMasterGain);
-            windNoise.start(now);
-            ambientOscillators.push(windNoise);
+            const breezeGain = ctx.createGain();
+            breezeGain.gain.value = 0.12;
+            breezeSrc.connect(breezeFilter).connect(breezeGain).connect(ambientMasterGain);
+            breezeSrc.start(now);
+            ambientOscillators.push(breezeSrc);
 
-            // 2. ÓRGANO GÓTICO DE HALLOWEEN (Sintetizador procedural de tubos de órgano)
-            function playOrganNote(freq, startTime, duration, vol = 0.22) {
+            // 3. CAJITA DE MÚSICA MÁGICA Y DULCE (Whimsical Celestial Music Box)
+            function playCelesteTinkle(freq, startTime, vol = 0.18) {
                 if (!halloweenAudioPlaying || !ambientMasterGain) return;
                 const noteGain = ctx.createGain();
                 noteGain.gain.setValueAtTime(0.001, startTime);
-                noteGain.gain.linearRampToValueAtTime(vol, startTime + 0.06);
-                noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                noteGain.gain.linearRampToValueAtTime(vol, startTime + 0.02);
+                noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + 1.8);
 
-                // Armónicos de tubo de órgano: fundamental + octava superior + sub-octava
-                const osc1 = ctx.createOscillator();
-                const osc2 = ctx.createOscillator();
-                const osc3 = ctx.createOscillator();
+                const oscPrimary = ctx.createOscillator();
+                const oscShimmer = ctx.createOscillator();
 
-                osc1.type = 'sawtooth'; osc1.frequency.value = freq;
-                osc2.type = 'triangle'; osc2.frequency.value = freq * 2;
-                osc3.type = 'sine';     osc3.frequency.value = freq * 0.5;
+                oscPrimary.type = 'sine';     oscPrimary.frequency.value = freq;
+                oscShimmer.type = 'triangle'; oscShimmer.frequency.value = freq * 3.01; // Brillo celestial mágico
 
-                const organFilter = ctx.createBiquadFilter();
-                organFilter.type = 'lowpass';
-                organFilter.frequency.value = 1100;
+                const shimmerGain = ctx.createGain();
+                shimmerGain.gain.value = 0.12;
 
-                osc1.connect(noteGain);
-                osc2.connect(noteGain);
-                osc3.connect(noteGain);
-                noteGain.connect(organFilter).connect(ambientMasterGain);
+                oscPrimary.connect(noteGain);
+                oscShimmer.connect(shimmerGain).connect(noteGain);
+                noteGain.connect(ambientMasterGain);
 
-                osc1.start(startTime); osc1.stop(startTime + duration);
-                osc2.start(startTime); osc2.stop(startTime + duration);
-                osc3.start(startTime); osc3.stop(startTime + duration);
+                oscPrimary.start(startTime); oscPrimary.stop(startTime + 1.8);
+                oscShimmer.start(startTime); oscShimmer.stop(startTime + 1.8);
             }
 
-            // 3. CAMPANA GÓTICA ESPELUZNANTE (Gothic Midnight Bell)
-            function playSpookyBell(freq, startTime) {
-                if (!halloweenAudioPlaying || !ambientMasterGain) return;
-                const bellGain = ctx.createGain();
-                bellGain.gain.setValueAtTime(0.28, startTime);
-                bellGain.gain.exponentialRampToValueAtTime(0.001, startTime + 3.2);
+            // Melodía romántica, dulce y mágica de caja de música
+            const melody = [
+                { f: 523.25, d: 0.5 }, // C5
+                { f: 659.25, d: 0.5 }, // E5
+                { f: 783.99, d: 0.5 }, // G5
+                { f: 1046.50, d: 0.8 }, // C6 (destello mágico)
+                { f: 880.00, d: 0.5 }, // A5
+                { f: 783.99, d: 0.5 }, // G5
+                { f: 659.25, d: 0.7 }, // E5
 
-                const bellOsc1 = ctx.createOscillator();
-                const bellOsc2 = ctx.createOscillator();
-                bellOsc1.type = 'sine';     bellOsc1.frequency.value = freq;
-                bellOsc2.type = 'triangle'; bellOsc2.frequency.value = freq * 2.76;
-
-                bellOsc1.connect(bellGain);
-                bellOsc2.connect(bellGain);
-                bellGain.connect(ambientMasterGain);
-
-                bellOsc1.start(startTime); bellOsc1.stop(startTime + 3.2);
-                bellOsc2.start(startTime); bellOsc2.stop(startTime + 3.2);
-            }
-
-            // 4. BUCLE DE SECUENCIA DE HALLOWEEN (Tema espeluznante clásico D menor)
-            const sequence = [
-                // Arpegio icónico clásico de Drácula / Halloween en Re menor
-                { note: 146.83, dur: 0.4 }, // D3
-                { note: 174.61, dur: 0.4 }, // F3
-                { note: 207.65, dur: 0.4 }, // G#3 (Tritono tétrico)
-                { note: 220.00, dur: 0.4 }, // A3
-                { note: 293.66, dur: 0.65 }, // D4
-                { note: 261.63, dur: 0.4 }, // C4
-                { note: 207.65, dur: 0.4 }, // G#3
-                { note: 174.61, dur: 0.6 }, // F3
-
-                // Frase descendente tétrica
-                { note: 146.83, dur: 0.45 }, // D3
-                { note: 138.59, dur: 0.45 }, // C#3
-                { note: 130.81, dur: 0.45 }, // C3
-                { note: 123.47, dur: 0.75 }, // B2
-
-                // Campana de medianoche + acorde de órgano sostenido
-                { note: 146.83, dur: 0.4, bell: 220 }, // A3 Bell
-                { note: 174.61, dur: 0.4 },
-                { note: 220.00, dur: 0.4 },
-                { note: 293.66, dur: 1.3 } // Acorde resolutivo de Halloween
+                { f: 587.33, d: 0.5 }, // D5
+                { f: 698.46, d: 0.5 }, // F5
+                { f: 880.00, d: 0.5 }, // A5
+                { f: 1174.66, d: 0.9 }, // D6
+                { f: 1046.50, d: 0.5 }, // C6
+                { f: 880.00, d: 0.5 }, // A5
+                { f: 783.99, d: 1.2 }  // G5 (resolución acogedora)
             ];
 
-            let stepIndex = 0;
-            function runSequence() {
+            let index = 0;
+            function runMelody() {
                 if (!halloweenAudioPlaying) return;
-                const item = sequence[stepIndex % sequence.length];
+                const item = melody[index % melody.length];
                 const currentTime = ctx.currentTime;
 
-                playOrganNote(item.note, currentTime, item.dur, 0.22);
-                if (item.bell) {
-                    playSpookyBell(item.bell, currentTime);
-                }
+                playCelesteTinkle(item.f, currentTime, 0.16);
 
-                stepIndex++;
-                const delayMs = item.dur * 960;
-                ambientIntervalId = setTimeout(runSequence, delayMs);
+                index++;
+                const delayMs = item.d * 850;
+                ambientIntervalId = setTimeout(runMelody, delayMs);
             }
 
-            runSequence();
+            runMelody();
         }
 
         function stopHalloweenAmbient() {
